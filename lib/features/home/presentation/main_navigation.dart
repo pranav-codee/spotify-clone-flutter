@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import 'home_screen.dart';
+import '../../search/search_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -15,9 +16,7 @@ class _MainNavigationState extends State<MainNavigation> {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    const Center(
-        child: Text('Search Screen',
-            style: TextStyle(color: AppColors.textPrimary))),
+    const SearchScreen(),
     const Center(
         child: Text('Library Screen',
             style: TextStyle(color: AppColors.textPrimary))),
