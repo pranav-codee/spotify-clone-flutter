@@ -13,7 +13,7 @@ class AppStrings {
   static const String signup = 'Sign up';
 
   // Greetings
-  static const String goodMorning = 'Good morning';
-  static const String goodAfternoon = 'Good afternoon';
-  static const String goodEvening = 'Good evening';
+  static const String goodMorning = 'Good Morning!';
+  static const String goodAfternoon = 'Good Afternoon!';
+  static const String goodEvening = 'Good Evening!';
 }

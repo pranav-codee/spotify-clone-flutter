@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
+import 'home_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -13,15 +14,13 @@ class _MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    const Center(
-        child:
-            Text('Home Screen', style: TextStyle(color: AppColors.background))),
+    const HomeScreen(),
     const Center(
         child: Text('Search Screen',
-            style: TextStyle(color: AppColors.background))),
+            style: TextStyle(color: AppColors.textPrimary))),
     const Center(
         child: Text('Library Screen',
-            style: TextStyle(color: AppColors.background))),
+            style: TextStyle(color: AppColors.textPrimary))),
   ];
 
   @override

@@ -9,4 +9,5 @@ class AppColors {
   static const Color textPrimary = Color(0xFFFFFFFF);
   static const Color textSecondary = Color(0xFFB3B3B3);
   static const Color textMuted = Color(0xFF727272);
+  static const Color surfaceLight = Color(0xFF404040);
 }
