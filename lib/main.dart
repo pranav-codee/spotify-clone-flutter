@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'core/theme/app_theme.dart';
 import 'core/constants/app_strings.dart';
+import 'features/home/presentation/main_navigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       title: AppStrings.appName,
       debugShowCheckedModeBanner: false, // Removes debug banner
       theme: AppTheme.darkTheme,
-      home: const MainScreen(),
+      home: const MainNavigation(),
     );
   }
 }
