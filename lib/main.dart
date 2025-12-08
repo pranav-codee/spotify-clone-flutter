@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'core/theme/app_theme.dart';
 import 'core/constants/app_strings.dart';
+import 'features/auth/presentation/splash_screen.dart';
+import 'features/auth/presentation/get_started_screen.dart';
+import 'features/auth/presentation/signup_screen.dart';
+import 'features/auth/presentation/login_screen.dart';
 import 'features/home/presentation/main_navigation.dart';
 
 void main() {
@@ -14,14 +18,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: AppStrings.appName,
-      debugShowCheckedModeBanner: false, // Removes debug banner
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
-      home: const MainNavigation(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const SplashScreen(),
+        '/get-started': (context) => const GetStartedScreen(),
+        '/signup': (context) => const SignupScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/home': (context) => const MainNavigation(),
+      },
     );
   }
 }
 
-// Temporary home screen
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
