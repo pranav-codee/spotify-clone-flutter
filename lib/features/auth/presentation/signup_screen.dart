@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotify_clone/features/auth/presentation/auth_service.dart';
 import '../../../core/constants/app_colors.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -117,12 +118,26 @@ class _SignupScreenState extends State<SignupScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // TODO: Implement signup with Firebase
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/home',
-                    (route) => false,
-                  );
+                  authService.value
+                      .signUpWithEmailAndPassword(
+                    _emailController.text,
+                    _passwordController.text,
+                  )
+                      .then((user) {
+                    if (user != null) {
+                      // Navigate to home screen after successful signup
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/home',
+                        (route) => false,
+                      );
+                    }
+                  }).catchError((error) {
+                    // Handle signup error
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Signup failed: $error')),
+                    );
+                  });
                 },
                 child: const Text('Create account'),
               ),
