@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../../core/constants/app_colors.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,8 +20,16 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(seconds: 2));
 
     if (mounted) {
-      // TODO: Check if user is logged in
-      Navigator.pushReplacementNamed(context, '/get-started');
+      // Check if user is logged in
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // User is logged in, go to home
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        // User is not logged in, go to get started
+        Navigator.pushReplacementNamed(context, '/get-started');
+      }
     }
   }
 
@@ -32,10 +41,10 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/icon/app_icon.png',
-              width: 80,
-              height: 80,
+            const Icon(
+              Icons.music_note_rounded,
+              size: 80,
+              color: AppColors.primary,
             ),
             const SizedBox(height: 16),
             Text(
@@ -45,6 +54,10 @@ class _SplashScreenState extends State<SplashScreen> {
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
               ),
+            ),
+            const SizedBox(height: 32),
+            const CircularProgressIndicator(
+              color: AppColors.primary,
             ),
           ],
         ),

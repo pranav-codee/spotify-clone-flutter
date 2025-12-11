@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:spotify_clone/features/auth/presentation/auth_service.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 
@@ -16,8 +18,67 @@ class HomeScreen extends StatelessWidget {
     }
   }
 
+  Future<void> _handleLogout(BuildContext context) async {
+    final shouldLogout = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: const Text(
+          'Log out',
+          style: TextStyle(color: AppColors.textPrimary),
+        ),
+        content: const Text(
+          'Are you sure you want to log out?',
+          style: TextStyle(color: AppColors.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(
+              'Log out',
+              style: TextStyle(color: AppColors.primary),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldLogout == true && context.mounted) {
+      try {
+        await authService.value.signOut();
+
+        if (context.mounted) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/get-started',
+            (route) => false,
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error logging out: ${e.toString()}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final userName = user?.displayName ?? 'User';
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -28,9 +89,24 @@ class HomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    _getGreeting(),
-                    style: Theme.of(context).textTheme.headlineLarge,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _getGreeting(),
+                          style: Theme.of(context).textTheme.headlineLarge,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          userName,
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   Row(
                     children: [
@@ -42,9 +118,60 @@ class HomeScreen extends StatelessWidget {
                         icon: const Icon(Icons.history),
                         onPressed: () {},
                       ),
-                      IconButton(
+                      PopupMenuButton<String>(
                         icon: const Icon(Icons.settings_outlined),
-                        onPressed: () {},
+                        color: AppColors.surface,
+                        onSelected: (value) {
+                          if (value == 'logout') {
+                            _handleLogout(context);
+                          }
+                        },
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            value: 'profile',
+                            child: Row(
+                              children: [
+                                const Icon(Icons.person_outline,
+                                    color: AppColors.textPrimary),
+                                const SizedBox(width: 12),
+                                Text(
+                                  'Profile',
+                                  style: const TextStyle(
+                                      color: AppColors.textPrimary),
+                                ),
+                              ],
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: 'settings',
+                            child: Row(
+                              children: [
+                                const Icon(Icons.settings_outlined,
+                                    color: AppColors.textPrimary),
+                                const SizedBox(width: 12),
+                                Text(
+                                  'Settings',
+                                  style: const TextStyle(
+                                      color: AppColors.textPrimary),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const PopupMenuDivider(),
+                          PopupMenuItem(
+                            value: 'logout',
+                            child: Row(
+                              children: [
+                                const Icon(Icons.logout, color: Colors.red),
+                                const SizedBox(width: 12),
+                                Text(
+                                  'Log out',
+                                  style: const TextStyle(color: Colors.red),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -91,7 +218,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // Quick access card widget
   Widget _buildQuickAccessCard(
       String title, IconData? icon, Color? iconBgColor) {
     return Container(
@@ -151,7 +277,6 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          // Title
           SizedBox(
             width: 140,
             child: Text(
